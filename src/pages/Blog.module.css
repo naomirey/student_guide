@@ -1,0 +1,66 @@
+.page {
+    padding: 10rem;
+    max-width: 60rem;
+    width: 90%;
+    margin: 2rem auto;
+    animation: page-appear 1s ease-out forwards;
+}
+
+.page ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+.BlogsLoading {
+    text-align: center;
+    color: white;
+  }
+  
+.BlogsError {
+text-align: center;
+color: red;
+}
+
+.button {
+    cursor: pointer;
+    font: inherit;
+    border: none;
+    background-color: #c96741;
+    color: white;
+    padding: 0.75rem 3rem;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 25px;
+    font-weight: bold;
+  }
+  
+  .button:hover,
+  .button:active {
+    background-color: #ac5013;
+  }
+
+  .blank {
+      padding: 10px;
+  }
+
+  .blogPost {
+      padding: 10px;
+  }
+
+  .heading {
+      font-weight: bold;
+  }
+
+@keyframes page-appear {
+    from {
+      opacity: 0;
+      transform: translateY(3rem);
+    }
+  
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  

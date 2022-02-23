@@ -5,7 +5,7 @@ import Card from './../components/Card';
 
 const BlogDetails = (props) => {
     const [blogs, setBlogs] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
+    // const [isLoading, setIsLoading] = useState(false);
     const [httpError, setHttpError] = useState(null);
     const params = useParams();
 

@@ -1,16 +1,45 @@
 import { useParams } from 'react-router-dom';
-import classes from './BudgetCalc.module.css';
+import classes from './BlogDetails.module.css';
 import { useState, useEffect } from 'react';
 import Card from './../components/Card';
+import DeleteBlog from './../components/DeleteBlog';
+import Modal from './../components/Modal';
+import { Link } from 'react-router-dom';
 
-const BlogDetails = (props) => {
+
+const BlogDetails = () => {
     const [blogs, setBlogs] = useState([]);
-    // const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [httpError, setHttpError] = useState(null);
+    const [deleteBlogModal, setDeleteBlogModal] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [didDelete, setDidDelete] = useState(false);
+    
+
     const params = useParams();
 
+    const showDeleteHandler = () => {
+        setDeleteBlogModal(true);
+    }
+
+    const hideDeleteHandler = () => {
+        setDeleteBlogModal(false);
+    }
+
+    // use response to get a status code and produce error message
+    // find this is fetch request for loading meals or in the http module
+    const deleteBlog = async () => {
+        setIsDeleting(true);
+        const response = await fetch('https://student-moving-out-guide-default-rtdb.firebaseio.com/blog_posts/' + params.blogID + '.json', {
+            method: 'DELETE',
+        })
+        setIsDeleting(false);
+        setDidDelete(true);
+
+        setDeleteBlogModal(false)
+    }
+
     useEffect(() => {
-        
         const fetchBlogs = async () => {
         setIsLoading(true);
         const response = await fetch('https://student-moving-out-guide-default-rtdb.firebaseio.com/blog_posts/'+ params.blogID + '.json');
@@ -34,9 +63,8 @@ const BlogDetails = (props) => {
             });
             console.log(loadedBlogs);
         }
-        // setBlogs(responseData);
-        // setIsLoading(false);
-        // console.log(blogs);
+        setBlogs(responseData);
+        setIsLoading(false);
         };
 
         fetchBlogs().catch((error) => {
@@ -45,27 +73,30 @@ const BlogDetails = (props) => {
         });
     }, []);
 
-    // const blogInfo = blogs.map((blog) => (
-    //     <div>
-    //         <Card>
-    //             <div className={classes.blogPost}>{blog.blog}</div>
-    //             <div>Posted {blog.date} by {blog.name} </div>
-    //             {/* <button className={classes.button} onClick={showDeleteHandler}>
-    //                 <span>Delete</span>
-    //             </button> */}
-    //             {/* {deleteBlog && <DeleteBlog onClose={hideDeleteHandler} blogName={blog.name} />} */}
-    //             {/* onPost={submitBlogHandler}/>} */}
-    //         </Card>
-    //         <div className={classes.blank} />
-    //     </div>
-    // ));
+    const deletedModalContent = 
+    <Modal>
+            <div>
+                {console.log("Hello")}
+                <label>{blogs.name} successfully deleted.</label>
+                <Link to={`/blog`}>
+                    <button className={classes['button']}>Close</button>
+                </Link>
+            </div>
+        </Modal>
 
     return(
         <section>
             <div className={classes.page}>
-                <h2>Budget Calc</h2>
-                <p>{blogs.name}</p>
-                </div>
+                <Card>
+                    <p>{blogs.blog}</p>
+                    <p>Posted By {blogs.name} on the {blogs.date} </p>
+                </Card>
+                <button className={classes.button} onClick={showDeleteHandler}>
+                        <span>Delete</span>
+                </button>
+                {deleteBlogModal && <DeleteBlog onClose={hideDeleteHandler} blogName={blogs.name} delete={deleteBlog}/>}
+                {didDelete && deletedModalContent}
+            </div>
         </section>
     )
 }

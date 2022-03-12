@@ -5,6 +5,7 @@ import { useState, useRef } from 'react';
 const isEmpty = value => value.trim() === '';
 
 const AddBlog = (props) => {
+    const [currentBlogs, setCurrentBlogs] = useState([]);
     const [formInputValid, setFormInputValid] = useState({
         name: true,
         blog: true,
@@ -48,6 +49,8 @@ const AddBlog = (props) => {
             blog: enteredBlog,
             date: enteredDate
         });
+        setCurrentBlogs(enteredNameValid);
+        console.log(currentBlogs);
     };
     
     const nameControlClasses = `${classes.control} ${

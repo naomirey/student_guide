@@ -1,9 +1,10 @@
 import classes from './Blog.module.css';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Card from './../components/Card';
-import AddBlog from './../components/AddBlog';
-import { Link } from 'react-router-dom';
+import BlogFormInput from '../components/Blog/BlogFormInput';
 import Modal from './../components/Modal';
+import { Link } from 'react-router-dom';
+
 
 const BlogsStored = () => {
     const [blogs, setBlogs] = useState([]);
@@ -15,12 +16,20 @@ const BlogsStored = () => {
 
     // const [postingBlog, setPostingBlog] = useState(false);
 
+    const refreshPage = ()=>{
+        window.location.reload();
+     }
+
     const showAddBlogHandler = () => {
         setAddBlog(true);
     };
 
     const hideAddBlogHandler = () => {
         setAddBlog(false);
+    }
+
+    const hideConfirmHandler = () => {
+        setDidAddBlog(false);
     }
 
     const submitBlogHandler = async (blogData) => {
@@ -37,21 +46,6 @@ const BlogsStored = () => {
         setIsAddingBlog(false);
         setDidAddBlog(true);
         setAddBlog(false);
-    }
-
-    const editBlog = () => {
-        const dummyID = "-Mt-5e6BxTV6SS-UvZY-";
-        const dummyName = "Edit";
-        const dummyBlog = "Blog Edit";
-        const dummyDate = "Date Edit"
-         fetch('https://student-moving-out-guide-default-rtdb.firebaseio.com/blog_posts/' + dummyID + '.json', {
-            method: 'PUT',
-            body: JSON.stringify({
-                name: dummyName,
-                blog: dummyBlog,
-                date: dummyDate
-            })
-        })
     }
 
     useEffect(() => {
@@ -104,18 +98,24 @@ const BlogsStored = () => {
 
     const blogsList = blogs.map((blog) => (
         <div>
-            <Link to={`/blog/${blog.id}`}>
+            <Link to={`/blog/${blog.id}`} style={{ textDecoration: 'none' }}>
                 <Card>
-                    <div className={classes.blogPost}>{blog.blog}</div>
-                    <div>Posted {blog.date} by {blog.name} </div>
-                    
-                    {/* onPost={submitBlogHandler}/>} */}
+                    <div className={classes.blogPost}>
+                        <div>{blog.blog}</div>
+                        <div>Posted {blog.date} by {blog.name} </div>
+                    </div>
                 </Card>
             <div className={classes.blank} />
             </Link>
         </div>
     ));
-
+    const confirmAddBlog =
+        <Modal>
+            <div>
+                <label>Blog was successfully added!</label>
+                <button onClick={refreshPage} className={classes['button']}>Close</button>
+            </div>
+        </Modal>
 
     return (
         
@@ -125,13 +125,12 @@ const BlogsStored = () => {
                 <button className={classes.button} onClick={showAddBlogHandler}>
                     <span>Add Blog Post</span>
                 </button>
-                {addBlog && <AddBlog onClose={hideAddBlogHandler} onPost={submitBlogHandler}/>}
+                {addBlog && <BlogFormInput onClose={hideAddBlogHandler} onPost={submitBlogHandler}/>}
+                {didAddBlog && confirmAddBlog}
                 <div className={classes.blank} />
                 <div className={classes.heading}>Blog Posts: </div>
                 <div className={classes.blank} />
                 <ul>{blogsList}</ul>
-                {/* <button className={classes.button} onClick={deleteBlog}>Delete Post</button> */}
-                <button className={classes.button} onClick={editBlog}>Edit Post</button>
             </section>
         </div>
     );

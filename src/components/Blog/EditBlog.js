@@ -1,4 +1,4 @@
-import Modal from './Modal'
+import Modal from '../Modal'
 import classes from "./DeleteBlog.module.css";
 import { useState } from 'react';
 

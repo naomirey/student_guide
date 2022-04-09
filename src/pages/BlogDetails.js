@@ -2,9 +2,11 @@ import { useParams } from 'react-router-dom';
 import classes from './BlogDetails.module.css';
 import { useState, useEffect } from 'react';
 import Card from './../components/Card';
-import DeleteBlog from './../components/DeleteBlog';
+import DeleteBlog from '../components/Blog/DeleteBlog';
 import Modal from './../components/Modal';
 import { Link } from 'react-router-dom';
+import BlogFormInput from '../components/Blog/BlogFormInput'
+import { propTypes } from 'react-bootstrap/esm/Image';
 
 
 const BlogDetails = () => {
@@ -14,6 +16,8 @@ const BlogDetails = () => {
     const [deleteBlogModal, setDeleteBlogModal] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [didDelete, setDidDelete] = useState(false);
+    const [didUpdate, setDidUpdate] = useState(false);
+    const [editBlogModal, setEditBlogModal] = useState(false);
     
 
     const params = useParams();
@@ -24,6 +28,17 @@ const BlogDetails = () => {
 
     const hideDeleteHandler = () => {
         setDeleteBlogModal(false);
+    }
+    function refreshPage() {
+        window.location.reload(false);
+    }
+    
+    const showEditHandler = () => {
+        setEditBlogModal(true);
+    }
+
+    const hideEditHandler = () => {
+        setEditBlogModal(false);
     }
 
     // use response to get a status code and produce error message
@@ -39,12 +54,24 @@ const BlogDetails = () => {
         setDeleteBlogModal(false)
     }
 
+    const editBlogHandler = (blogData) => {
+         fetch('https://student-moving-out-guide-default-rtdb.firebaseio.com/blog_posts/' + params.blogID + '.json', {
+            method: 'PUT',
+            body: JSON.stringify({
+                name: blogData.name,
+                blog: blogData.blog,
+                date: blogData.date
+            })
+        })
+        setEditBlogModal(false);
+        setDidUpdate(true);
+    }
+
     useEffect(() => {
         const fetchBlogs = async () => {
         setIsLoading(true);
         const response = await fetch('https://student-moving-out-guide-default-rtdb.firebaseio.com/blog_posts/'+ params.blogID + '.json');
         const responseData = await response.json();
-        console.log(responseData);
 
         if (!response.ok) {
             throw new Error('Something went wrong!')
@@ -61,7 +88,6 @@ const BlogDetails = () => {
                 blog: responseData[key].blog,
                 date: responseData[key].date,
             });
-            console.log(loadedBlogs);
         }
         setBlogs(responseData);
         setIsLoading(false);
@@ -73,13 +99,21 @@ const BlogDetails = () => {
         });
     }, []);
 
-    const deletedModalContent = 
+    const deletedModalContent =
     <Modal>
             <div>
-                {console.log("Hello")}
-                <label>{blogs.name} successfully deleted.</label>
+                <label>{blogs.name} deleted successfully.</label>
                 <Link to={`/blog`}>
                     <button className={classes['button']}>Close</button>
+                </Link>
+            </div>
+        </Modal>
+    const editModalContent =
+    <Modal>
+            <div>
+                <label>{blogs.name} edited successfully.</label>
+                <Link to={`/blog`}>
+                    <button onClick={refreshPage} className={classes['button']}>Close</button>
                 </Link>
             </div>
         </Modal>
@@ -96,6 +130,14 @@ const BlogDetails = () => {
                 </button>
                 {deleteBlogModal && <DeleteBlog onClose={hideDeleteHandler} blogName={blogs.name} delete={deleteBlog}/>}
                 {didDelete && deletedModalContent}
+                <button className={classes.button} onClick={showEditHandler}>
+                        <span>Edit</span>
+                </button>
+                {editBlogModal && <BlogFormInput onClose={hideEditHandler} onPost={editBlogHandler} 
+                currentName={blogs.name}
+                currentDate={blogs.date}
+                currentBlog={blogs.blog}/>}
+                {didUpdate && editModalContent}
             </div>
         </section>
     )

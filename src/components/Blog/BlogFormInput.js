@@ -1,5 +1,5 @@
 import classes from "./BlogFormInput.module.css";
-import Modal from './Modal'
+import Modal from '../Modal'
 import { useState, useRef } from 'react';
 
 

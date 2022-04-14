@@ -7,7 +7,7 @@ import BlogsStored from './pages/Blog';
 import MealPlanner from './pages/MealPlanner';
 import BlogDetails from './pages/BlogDetails';
 import Container from 'react-bootstrap/Container';
-import BudgetCalculator from './pages/BudgetCalculator';
+import BudgetTrial from './pages/BudgetTrial';
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
               <Welcome />
             </Route>
             <Route path="/budget-calculator">
-              <BudgetCalculator />
+              <BudgetTrial />
             </Route>
             <Route path="/meal-planner">
               <MealPlanner />

@@ -2,7 +2,7 @@ import classes from './MealPlanner.module.css';
 import { Button, Stack } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 import BudgetCard from '../components/BudgetCalc/BudgetCard';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AddBudgetModal from './../components/BudgetCalc/AddBudgetModal'
 import { useBudgets, UNCATEGORIZED_BUDGET_ID } from '../context/BudgetContext';
 import AddExpenseModal from '../components/BudgetCalc/AddExpenseModal';
@@ -17,11 +17,32 @@ const BudgetCalculator = () => {
     const [ showAddExpenseModal, setShowAddExpenseModal ] = useState(false);
     const [ viewExpensesModalBudgetId, setViewExpensesModalBudgetId]  = useState();
     const [ addExpenseModalBudgetId, setAddExpenseModalBudgetId ] = useState();
-    const { budgets, getBudgetExpenses } = useBudgets();
+    const [ didAddBudget, setDidAddBudget ] = useState(false);
+    const [ addBudget, setAddBudget ] = useState(false);
+    const [ httpError, setHttpError ] = useState(null);
+    const { budgets, budgetsRetrievedHandler } = useBudgets();
+    const [ isLoading, setIsLoading ] = useState(false);
+
     const openAddExpenseModal = (budgetId) => {
         setShowAddExpenseModal(true);
         setAddExpenseModalBudgetId(budgetId);
     }
+
+    // const submitBudgetHandler = async (budgetData) => {
+    //     const response = await fetch('https://student-guide-budget-calc-default-rtdb.firebaseio.com/budgets.json', {
+    //         method: 'POST',
+    //         body: JSON.stringify({
+    //             id: budgetData.id,
+    //             name: budgetData.name,
+    //             amount: budgetData.amount,
+    //             max: budgetData.max
+    //         })
+    //     });
+    //     setDidAddBudget(true);
+    //     setAddBudget(false);
+    // }
+
+    
     return (
         <>
         <Container className={classes.page}>
@@ -37,7 +58,7 @@ const BudgetCalculator = () => {
             alignItems:"flex-start"
         }}>
             {budgets.map(budget => {
-                const amount = getBudgetExpenses(budget.id).reduce(
+                const amount = budgetsRetrievedHandler(budget.id).reduce(
                     (total, expense) => total + expense.amount,
                     0
                 ) // get all expenses for this budget and get a total as "amount"

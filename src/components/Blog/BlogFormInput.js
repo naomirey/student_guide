@@ -75,7 +75,7 @@ const BlogFormInput = (props) => {
             </div>
             <div className={dateControlClasses}>
                 <label htmlFor='date'>Date</label>
-                <input type='text' id='date' ref={dateInputRef} />
+                <input type='date' id='date' ref={dateInputRef} />
                 {!formInputValid.date && <p>Error enter a date</p>}
             </div>
             <div className={classes.actions}>

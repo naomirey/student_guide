@@ -6,7 +6,6 @@ import DeleteBlog from '../components/Blog/DeleteBlog';
 import Modal from './../components/Modal';
 import { Link } from 'react-router-dom';
 import BlogFormInput from '../components/Blog/BlogFormInput'
-import { propTypes } from 'react-bootstrap/esm/Image';
 
 
 const BlogDetails = () => {

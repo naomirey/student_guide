@@ -2,8 +2,8 @@ import BudgetCard from './BudgetCard'
 import { UNCATEGORIZED_BUDGET_ID, useBudgets } from '../../context/BudgetContext'
 
 export default function UncategorisedBudgetCard(props) {
-    const { getBudgetExpenses } = useBudgets();
-    const amount = getBudgetExpenses(UNCATEGORIZED_BUDGET_ID).reduce(
+    const { budgetsRetrievedHandler } = useBudgets();
+    const amount = budgetsRetrievedHandler(UNCATEGORIZED_BUDGET_ID).reduce(
         (total, expense) => total + expense.amount,
         0
     )

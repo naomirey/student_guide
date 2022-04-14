@@ -5,7 +5,6 @@ import BlogFormInput from '../components/Blog/BlogFormInput';
 import Modal from './../components/Modal';
 import { Link } from 'react-router-dom';
 
-
 const BlogsStored = () => {
     const [blogs, setBlogs] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -13,9 +12,6 @@ const BlogsStored = () => {
     const [addBlog, setAddBlog] = useState(false);
     const [isAddingBlog, setIsAddingBlog] = useState(false);
     const [didAddBlog, setDidAddBlog] = useState(false);
-
-    // const [postingBlog, setPostingBlog] = useState(false);
-
     const refreshPage = ()=>{
         window.location.reload();
      }
@@ -28,9 +24,9 @@ const BlogsStored = () => {
         setAddBlog(false);
     }
 
-    const hideConfirmHandler = () => {
-        setDidAddBlog(false);
-    }
+    // const hideConfirmHandler = () => {
+    //     setDidAddBlog(false);
+    // }
 
     const submitBlogHandler = async (blogData) => {
         setIsAddingBlog(false);
@@ -72,6 +68,7 @@ const BlogsStored = () => {
         }
         setBlogs(loadedBlogs);
         setIsLoading(false);
+        console.log(blogs);
         };
 
         fetchBlogs().catch((error) => {
@@ -95,7 +92,7 @@ const BlogsStored = () => {
         </section>
         )
     }
-
+    console.log(blogs);
     const blogsList = blogs.map((blog) => (
         <div>
             <Link to={`/blog/${blog.id}`} style={{ textDecoration: 'none' }}>
@@ -118,7 +115,6 @@ const BlogsStored = () => {
         </Modal>
 
     return (
-        
         <div>
             <section className={classes.page}>
             <div className={classes.blank} />

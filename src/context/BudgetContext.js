@@ -1,24 +1,66 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
-import useLocalStorage from '../hooks/useLocalStorage'
+import useLocalStorage from '../hooks/useLocalStorage';
+import useStorage from '../hooks/useStorage';
 
 const BudgetContext = React.createContext();
+const BlogContext = React.createContext();
 
 export const UNCATEGORIZED_BUDGET_ID = "Uncategorized"
 
 export const useBudgets = () => {
     return useContext(BudgetContext);
-
 }
 
 export const BudgetProvider = ({children}) => {
     const [budgets, setBudgets] = useLocalStorage("budgets", []);
     const [expenses, setExpenses] = useLocalStorage("expenses", []);
     const [incomings, setIncomings] = useLocalStorage("incomings", []);
+    const [bleg, setBleg] = useStorage("bleg", []);
+    const [ httpError, setHttpError ] = useState(null);
+    const [ isLoading, setIsLoading ] = useState(false);
+    const [ budgetsRetrieved, setBudgetsRetrieved] = useState([]);
 
-    const getBudgetExpenses = (budgetId) => {
-        return expenses.filter(expense => expense.budgetId === budgetId)
+    useEffect(() => {
+        const fetchBudgets = async () => {
+        setIsLoading(true);
+        const response = await fetch('https://student-guide-budget-calc-default-rtdb.firebaseio.com/budgets.json');
+        const responseData = await response.json();
+    
+        if (!response.ok) {
+            throw new Error('Something went wrong!')
+            
+        }
+    
+        const loadedBudgets = [];
+        
+        for (const key in responseData) {
+            loadedBudgets.push({
+                key: key,
+                id: key,
+                name: responseData[key].name,
+                amount: responseData[key].amount,
+                max: responseData[key].max,
+            });
+        }
+        setBudgetsRetrieved(loadedBudgets);
+        console.log(budgetsRetrieved);
+        setIsLoading(false);
+        };
+    
+        fetchBudgets().catch((error) => {
+        setIsLoading(false);
+        setHttpError(error.message);
+        });
+    }, []);
+    
+
+    const budgetsRetrievedHandler = (budgetId) => {
+        return budgetsRetrieved.filter(expense => expense.budgetId === budgetId)
+        console.log(budgetsRetrieved);
     }
+
+    
     
     const addExpense = ( { description, amount, budgetId } ) => {
         setExpenses(prevExpenses => {
@@ -72,13 +114,13 @@ export const BudgetProvider = ({children}) => {
         budgets,
         expenses,
         incomings,
-        getBudgetExpenses,
+        // getBudgetExpenses,
         addExpense,
         addBudget,
         addIncoming,
         deleteBudget,
         deleteExpense,
-        deleteIncoming
+        deleteIncoming,
     }} >
         {children}
     </BudgetContext.Provider>

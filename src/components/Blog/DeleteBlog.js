@@ -1,6 +1,5 @@
 import Modal from '../Modal'
 import classes from "./DeleteBlog.module.css";
-import { useState } from 'react';
 
 
 const DeleteBlog = (props) => {

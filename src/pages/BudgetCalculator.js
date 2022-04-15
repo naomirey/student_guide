@@ -46,7 +46,7 @@ const BudgetCalculator = () => {
     return (
         <>
         <Container className={classes.page}>
-        <Stack direction="horizontal" gap="2" className="mb-4">
+        <Stack direction="row" gap="2" className="mb-4">
             <h2 className="me-auto">Budgets</h2>
             <Button variant="primary" onClick={() => setShowAddBudgetModal(true)}>Add Budget</Button>
             <Button variant="outline-primary" onClick={openAddExpenseModal}>Add Expense</Button>

@@ -1,4 +1,5 @@
-import { Card, ProgressBar, Button, Stack } from 'react-bootstrap';
+import { Card, ProgressBar, Button } from 'react-bootstrap';
+import Stack from '@mui/material/Stack';
 import { currencyFormatter } from '../utils';
 
 export default function BudgetCard({ name, amount, max, grey, onAddExpenseClick, hideButtons, onViewExpenseClick }) {
@@ -44,7 +45,7 @@ export default function BudgetCard({ name, amount, max, grey, onAddExpenseClick,
                     />
                 )}
                 {!hideButtons && (
-                <Stack direction="horizontal" gap="2" className="mt-4">
+                <Stack direction="row" gap="2" className="mt-4">
                     <Button variant="outline-primary" className="ms-auto" onClick={onAddExpenseClick}>Add Expense</Button>
                     <Button variant="outline-secondary" onClick={onViewExpenseClick}>View Expenses</Button>
                 </Stack>

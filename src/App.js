@@ -4,7 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 import Welcome from './pages/Welcome';
 import BillCompare from './pages/BillCompare';
 import BlogsStored from './pages/Blog';
-import MealPlanner from './pages/MealPlanner';
+import MealPlan from './pages/MealPlan';
 import BlogDetails from './pages/BlogDetails';
 import Container from 'react-bootstrap/Container';
 import BudgetTrial from './pages/BudgetTrial';
@@ -23,7 +23,7 @@ function App() {
               <BudgetTrial />
             </Route>
             <Route path="/meal-planner">
-              <MealPlanner />
+              <MealPlan />
             </Route>
             <Route path="/expense-comparison">
               <BillCompare />

@@ -1,7 +1,10 @@
 import React from 'react'
-import Link, { useState, useEffect, useRef } from 'react';
+import Link, { useState, useEffect, Button } from 'react';
 import Card from '../../components/Card';
 import { Table, DropdownButton, Dropdown, Form } from 'react-bootstrap';
+import instance from '../../firebase/instance';
+import { ImageListItemBar } from '@mui/material';
+
 
 export default function ShowMealPlan() {
     const [isLoading, setIsLoading] = useState(true);
@@ -9,90 +12,46 @@ export default function ShowMealPlan() {
     const [httpError, setHttpError] = useState([]);
     const [currentMealPlans, setCurrentMealPlans] = useState([]);
     const [currentDates, setCurrentDates] = useState([]);
-    const [dateState, setDateState] = useState("2022-04-18")
+    const [dateState, setDateState] = useState(null)
+    const [results, setResults] = useState();
 
     useEffect(() => {
-        const fecthDates = async () => {
+        setIsLoading(true);
+        instance.get('/meal-plans.json').then((response)=>{
+            console.log(response);
+            const currentDatesStored = [];
+            for (const key in response.data) {
+                currentDatesStored.push({...response.data[key], id:key});
+            }
+            setCurrentDates(currentDatesStored);
+            setIsLoading(false);
+            console.log(currentDatesStored);
+        
+    });
+        const fetchDates = async () => {
             setIsLoading(true);
-            const response = await fetch('https://student-guide-meal-planner-default-rtdb.firebaseio.com/meal-plans.json');
-            const responseData = await response.json();
-            if (!response.ok) {
-                throw new Error('Something went wrong!') 
-            }
-            const loadedDates = [];
-            for (const key in responseData) {
-                loadedDates.push({
-                    key:key,
-                    id:key
-                });
-            }
-            setCurrentDates(loadedDates);
-            setIsLoading(false);
-        }
-        fecthDates().catch((error) => {
-            setIsLoading(false);
-            setHttpError(error.message);
+            instance.get('/meal-plans.json').then((response)=>{
+                console.log(response);
+            
         });
+    }
         const fetchMealPlan = async () => {
             setIsLoading(true);
             const date = dateState;
-            console.log(date)
-            const response = await fetch('https://student-guide-meal-planner-default-rtdb.firebaseio.com/meal-plans/' + date + '.json');
-            const responseData = await response.json();
-            if (!response.ok) {
-                throw new Error('Something went wrong!') 
-            }
-        
-            const loadedMealPlans = [];
-            
-            for (const key in responseData) {
-                    loadedMealPlans.push({
-                        key: key,
-                        id: key,
-                        breakfast: responseData[key].breakfast,
-                        lunch: responseData[key].lunch,
-                        dinner: responseData[key].dinner,
-                    });
-                }
-                setCurrentMealPlans(loadedMealPlans);
-                setIsLoading(false);
-                console.log(currentMealPlans);
-                };
-        
-                fetchMealPlan().catch((error) => {
-                        setIsLoading(false);
-                        setHttpError(error.message);
-                });
-           
-        const fetchMeals = async () => {
-            setIsLoading(true);
-            const response = await fetch('https://student-guide-meal-planner-default-rtdb.firebaseio.com/meals.json');
-            const responseData = await response.json();
-    
-            if (!response.ok) {
-                throw new Error('Something went wrong!')
+            instance.get('/meal-plans/' + date + '.json').then((response)=>{
+                const loadedMealPlans = [];
                 
+                for (const key in response.data) {
+                    loadedMealPlans.push({ ...response.data[key], id:key});
             }
-    
-            const loadedMeals = [];
-            
-            for (const key in responseData) {
-                loadedMeals.push({
-                    key: key,
-                    id: key,
-                    name: responseData[key].name,
-                });
-            }
-            setCurrentMeals(loadedMeals);
+            setResults(loadedMealPlans);
             setIsLoading(false);
-            console.log(currentMeals);
-            };
-    
-            fetchMeals().catch((error) => {
-                    setIsLoading(false);
-                    setHttpError(error.message);
-            })
-       
+            });
+        };
+        fetchMealPlan().catch((error) => {
+                setIsLoading(false);
+                setHttpError(error.message);
+        });     
     }, [dateState]);
 
     if (isLoading) { 
@@ -103,59 +62,127 @@ export default function ShowMealPlan() {
         );
     }
     
-    const currentMealList = currentMeals.map((meal, index) => (
-        <div>
-            <Card>
-                <div>
-                    <ul key={index}>{meal.name}</ul>
-                </div>
-            </Card> 
-        <div />
-        </div>
-    ));
+    // const currentMealList = currentMeals.map((meal, index) => (
+    //     <div>
+    //         <Card>
+    //             <div>
+    //                 <ul key={index}>{meal.name}</ul>
+    //             </div>
+    //         </Card> 
+    //     <div />
+    //     </div>
+    // ));
     
-    const dateList = currentDates.map((date) => (date.id));
+    // const dateList = currentDates.map((date) => (date));
+    
     return (
         <div>
-            {currentMealList}
-            <div className = "container p-5">
+            <div className = "container p-2">
                 <select 
-                    className = "custom-select" 
+                    className = "custom-select"
                     value={dateState}
                     onChange={(e)=>{
                         const selectedDate = e.target.value
                         setDateState(selectedDate)
-                        console.log(selectedDate)
-                }}>
-                    {dateList.map((date, key) => (
-                        <option key={key} value={date}>{date}</option>
+                    }}>
+                    <option disabled selected="selected">Select Date</option>
+                    {currentDates.map((key) => (
+                        <option key={key.id} value={key.id}>{key.id}</option>
                     ))}
                 </select>
+                {console.log(currentDates)}
             </div>
+            {dateState &&
+            <>
+                <Table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Breakfast</th>
+                            <th>Lunch</th>
+                            <th>Dinner</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {   
+                                results.map((item) =>
+                                <tr key={item.id}>
+                                    <td>{item.day}</td>
+                                    <td>{item.breakfast}</td>
+                                    <td>{item.lunch}</td>
+                                    <td>{item.dinner}</td>
+                                </tr>
+                                )
+                            }
+                    </tbody>
+                </Table>
+                </>
+            }
             
-            <h2>Table</h2>
-            <Table>
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Breakfast</th>
-                        <th>Lunch</th>
-                        <th>Dinner</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            currentMealPlans.map((item,i) =>
-                            <tr key={i}>
-                                <td>{item.id}</td>
-                                <td>{item.breakfast}</td>
-                                <td>{item.lunch}</td>
-                                <td>{item.dinner}</td>
-                            </tr>
-                            )
-                        }
-                </tbody>
-            </Table>
         </div>
     )
 }
+
+
+
+// const response = await fetch('https://student-guide-meal-planner-default-rtdb.firebaseio.com/meal-plans/' + date + '.json');
+                // const responseData = await response.json();
+                // if (!response.statusText ==="OK") {
+                //     throw new Error('Something went wrong!') 
+                // }
+            
+                // const loadedMealPlans = [];
+                
+                // for (const key in response.data) {
+                //         loadedMealPlans.push({
+                //             key: key,
+                //             id: key,
+                //             day: response[key].day,
+                //             breakfast: response[key].breakfast,
+                //             lunch: response[key].lunch,
+                //             dinner: response[key].dinner,
+                //         });
+                //     }
+                //     setCurrentMealPlans(loadedMealPlans);
+                //     setIsLoading(false);
+                //     console.log(currentMealPlans);
+                //     console.log(loadedMealPlans)
+                //     });
+                // };
+            
+
+
+                // const responseData = await response.json();
+            // if (!response.ok) {
+            //     throw new Error('Something went wrong!') 
+            // }
+            // const loadedDates = [];
+            // for (const key in responseData) {
+            //     loadedDates.push({
+            //         key:key,
+            //         id:key
+            //     });
+            // }
+            // setCurrentDates(loadedDates);
+            // setIsLoading(false);
+        // }
+        // fecthDates().catch((error) => {
+        //     setIsLoading(false);
+        //     setHttpError(error.message);
+
+
+                         // const response = await fetch('https://student-guide-meal-planner-default-rtdb.firebaseio.com/meal-plans/' + date + '.json');
+                // const responseData = await response.json();
+                // if (!response.statusText ==="OK") {
+                //     throw new Error('Something went wrong!') 
+                // }
+
+
+                // loadedMealPlans.push({
+                        //     key: key,
+                        //     id: key,
+                        //     day: response[key].day,
+                        //     breakfast: response[key].breakfast,
+                        //     lunch: response[key].lunch,
+                        //     dinner: response[key].dinner,
+                        // });

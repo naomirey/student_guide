@@ -29,6 +29,7 @@ const BlogsStored = () => {
     // }
 
     const submitBlogHandler = async (blogData) => {
+        console.log(blogData)
         setIsAddingBlog(false);
         const response = await fetch('https://student-moving-out-guide-default-rtdb.firebaseio.com/blog_posts.json', {
             method: 'POST',

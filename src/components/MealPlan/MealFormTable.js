@@ -1,10 +1,15 @@
 import React from 'react'
 import { Button, Form, Col, Row, Table } from 'react-bootstrap';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import instance from '../../firebase/instance';
+import { useAuth0 } from "@auth0/auth0-react";
+
+const isEmpty = value => value.trim() === '';
 
 export default function MealFormTable(props) {
-    const [isAddingMealPlan, setIsAddingMealPlan] = useState(false);
+    const [formInputValid, setFormInputValid] = useState(true);
+    const { user } = useAuth0();
+    // const [isAddingMealPlan, setIsAddingMealPlan] = useState(false);
     const dateSelected = useRef();
     const breakfastMon = useRef();
     const lunchMon = useRef();
@@ -52,11 +57,30 @@ export default function MealFormTable(props) {
         const enteredLunchSun=lunchSun.current.value;
         const enteredDinnerSun=dinnerSun.current.value;
 
+        const refreshPage = ()=>{
+            window.location.reload();
+         }
+         
+        const enteredDateValid = !isEmpty(enteredDate);
+        setFormInputValid(enteredDateValid)
+        
+        if (!enteredDateValid) {
+            return;
+        }
+
         const submitMealPlanner = async (formData) => {
-            instance.put('/meal-plans/'+ enteredDate + '.json', formData).then((response)=>
-            console.log(response));
+            instance.put('/meal-plans/'+ user.nickname + '/' + enteredDate + '.json', formData).then((response)=>
+            {if (response.statusText == "OK") {
+                refreshPage();
+                alert("Added Successfully")
+                console.log("success")
+            } else{
+                alert("Error")
+            }
+        });
         
         }
+
         
         submitMealPlanner({
             "0": {
@@ -105,11 +129,11 @@ export default function MealFormTable(props) {
     }
 
     return (
-
         <>
         <div>
         <input ref={dateSelected} type="week" name="date"/>
         <Button onClick={props.showAddMeal}>Add Meal</Button>
+        {!formInputValid && <p style={{color:"red"}}>Select a week</p>}
         </div>
         <Table>
             <thead>

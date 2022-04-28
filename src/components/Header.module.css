@@ -1,4 +1,4 @@
- .header {
+ /* .header {
     position: fixed;
     top: 0;
     left: 0;
@@ -12,16 +12,113 @@
     padding: 0 10%;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
     z-index: 10;
+  } */
+  .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 12rem;
+    background-color: #265fa8;
+    color: white;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    z-index: 10;
+  }
+  .navbar {
+    /* position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5rem;
+    background-color: #8a2b06;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    z-index: 10; */
+    font-weight: bold;
+    display: flex;
+    margin: 20px;
+  }
+  .sidebar{
+    background-color:#265fa8;
+  }
+  .topcorner{
+    position:absolute;
+    top:0;
+    right:0;
+    width: 10%;
+    height: 10%;
+   }
+  
+   .image{
+    border-radius: 4px;
+    padding: 5px;
+    width: 30px;
+   }
+   
+   .button{
+     border: 1px solid transparent;
+     background-color: transparent;
+   }
+  a:link { text-decoration: none; }
+
+
+  a:visited { text-decoration: none; }
+
+
+  a:hover { text-decoration: none; }
+
+
+  a:active { text-decoration: none; }
+
+  .div {
+    position: absolute;
+    top: 80px;
+    right: 20px;
+    font-size: 20px;
+  }
+  
+/*  
+    width: 100%;
+    background-color: #a14521;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    z-index: 10;
   }
 
-  /* .header {
+  .main-image {
+    width: 100%;
+    height: 25rem;
+    z-index: 0;
+    overflow: hidden;
+  }
+  
+  .main-image img {
+    width: 110%;
+    height: 100%;
+    object-fit: cover;
+    transform: rotateZ(-5deg) translateY(-4rem) translateX(-1rem);
+  }
+  
+
+  .header {
     width: 100%;
     height: 5rem;
     background-color: #044599;
     padding: 0 10%;
-  } */
+  } 
   
-  .header nav {
+   .header nav {
     height: 100%;
   }
   .header h1 {
@@ -32,7 +129,6 @@
   .header ul, h1 {
     height: 100%;
     list-style: none;
-    display: flex;
     padding: 10;
     margin: 0;
     align-items: center;
@@ -47,12 +143,12 @@
   .header a {
     color: white;
     text-decoration: none;
-  }
+  } */
   
-  .header a:hover,
+  /* .header a:hover,
   .header a:active,
   .header a.active {
-    color: #e8baf7;
+    color: #572269;
     padding-bottom: 0.25rem;
     border-bottom: 4px solid #e8baf7;
-  }
+  }  */

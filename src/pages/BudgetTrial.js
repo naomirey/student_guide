@@ -1,26 +1,20 @@
-import classes from './Blog.module.css';
-import ViewBudget from './../components/BudgetCalc/ViewBudgets';
-import ViewIncomings from './../components/BudgetCalc/ViewIncomings';
-import TotalBudgetCard from './../components/BudgetCalc/TotalBudgetCard';
-import { useState } from "react";
-import ViewExpensesModal from './../components/BudgetCalc/ViewExpensesModal';
+import ViewBudgetCalc from '../components/BudgetCalculator/ViewBudgetCalc';
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function BudgetTrial() {
-    const [viewExpensesModalBudgetId, setViewExpensesModalBudgetId] = useState()
+    const { isAuthenticated, isLoading } = useAuth0();
 
     return (
-        <div>
-            <section className={classes.page}>
-            <div className={classes.blank} />
-                <ViewBudget />
-                <ViewIncomings />
-                <TotalBudgetCard />
-                {/* <ViewExpensesModal
-                    budgetId={viewExpensesModalBudgetId}
-                    handleClose={() => setViewExpensesModalBudgetId()}
-                /> */}
-            </section>
+        <div style={{ padding: '13rem'}}>
+        {isAuthenticated ?
+            <ViewBudgetCalc />
+            : isLoading ?
+            <h3>Loading ..</h3>
+                :
+            <h2>Login to start budgetting!</h2>
+        }
         </div>
+        
     )
 }
 

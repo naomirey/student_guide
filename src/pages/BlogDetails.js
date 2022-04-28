@@ -118,28 +118,26 @@ const BlogDetails = () => {
         </Modal>
 
     return(
-        <section>
-            <div className={classes.page}>
-                <Card>
-                    <p>{blogs.blog}</p>
-                    <p>Posted By {blogs.name} on the {blogs.date} </p>
-                </Card>
-                <button className={classes.button} onClick={showDeleteHandler}>
-                        <span>Delete</span>
-                </button>
-                {deleteBlogModal && <DeleteBlog onClose={hideDeleteHandler} blogName={blogs.name} delete={deleteBlog}/>}
-                {didDelete && deletedModalContent}
-                <button className={classes.button} onClick={showEditHandler}>
-                        <span>Edit</span>
-                </button>
-                {editBlogModal && <BlogFormInput onClose={hideEditHandler} onPost={editBlogHandler} 
-                currentName={blogs.name}
-                currentDate={blogs.date}
-                currentBlog={blogs.blog}/>}
-                {didUpdate && editModalContent}
-            </div>
-        </section>
-    )
+        <div className={classes.page}>
+            <Card>
+                <p>{blogs.blog}</p>
+                <p>Posted By {blogs.name} on the {blogs.date} </p>
+            </Card>
+            <button className={classes.button} onClick={showDeleteHandler}>
+                    <span>Delete</span>
+            </button>
+            {deleteBlogModal && <DeleteBlog onClose={hideDeleteHandler} blogName={blogs.name} delete={deleteBlog}/>}
+            {didDelete && deletedModalContent}
+            <button className={classes.button} onClick={showEditHandler}>
+                    <span>Edit</span>
+            </button>
+            {editBlogModal && <BlogFormInput onClose={hideEditHandler} onPost={editBlogHandler} 
+            currentName={blogs.name}
+            currentDate={blogs.date}
+            currentBlog={blogs.blog}/>}
+            {didUpdate && editModalContent}
+        </div>
+)
 }
 
 export default BlogDetails;

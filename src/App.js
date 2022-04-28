@@ -8,15 +8,23 @@ import MealPlan from './pages/MealPlan';
 import BlogDetails from './pages/BlogDetails';
 import Container from 'react-bootstrap/Container';
 import BudgetTrial from './pages/BudgetTrial';
+import { useState } from 'react';
 
 function App() {
+  const [loggedIn, setLoggedIn] = useState();
+
+  function getLoggedIn(isLoggedIn)
+  {
+    setLoggedIn(isLoggedIn)
+  }
+
   return (
     <Container>
       <div>
-        <Header />
+        <Header getState={getLoggedIn} />
         <main>
           <Switch>
-            <Route path="/welcome">
+            <Route path="/" exact>
               <Welcome />
             </Route>
             <Route path="/budget-calculator">
@@ -29,10 +37,10 @@ function App() {
               <BillCompare />
             </Route>
             <Route path="/blog" exact>
-              <BlogsStored />
+              <BlogsStored/>
             </Route>
             <Route path="/blog/:blogID">
-              <BlogDetails />
+              <BlogDetails isLoggedIn={loggedIn} />
             </Route>
           </Switch>
         </main>

@@ -5,16 +5,25 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { BudgetProvider } from './context/BudgetContext';
+// import { BudgetProvider } from './context/BudgetContext';
+import { Auth0Provider } from "@auth0/auth0-react";
+
 
 ReactDOM.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <BudgetProvider>
+  <Auth0Provider
+    domain="dev-xp0tee4m.us.auth0.com"
+    clientId="DOIGCDCcQBTMhsH7GZjfIMOBewnOrZXG"
+    redirectUri={window.location.origin}
+  >
+    <React.StrictMode>
+      <BrowserRouter>
+      {/* <BudgetProvider> */}
         <App />
-      </BudgetProvider>
-    </BrowserRouter>
-  </React.StrictMode>,
+      {/* </BudgetProvider> */}
+      </BrowserRouter>
+    </React.StrictMode>
+  </Auth0Provider>
+  ,
   document.getElementById('root')
 );
 

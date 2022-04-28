@@ -4,6 +4,8 @@ import Card from '../../components/Card';
 import { Table, DropdownButton, Dropdown, Form } from 'react-bootstrap';
 import instance from '../../firebase/instance';
 import { ImageListItemBar } from '@mui/material';
+import { useAuth0 } from "@auth0/auth0-react";
+
 
 
 export default function ShowMealPlan() {
@@ -14,10 +16,12 @@ export default function ShowMealPlan() {
     const [currentDates, setCurrentDates] = useState([]);
     const [dateState, setDateState] = useState(null)
     const [results, setResults] = useState();
+    const { user } = useAuth0();
+
 
     useEffect(() => {
         setIsLoading(true);
-        instance.get('/meal-plans.json').then((response)=>{
+        instance.get('/meal-plans/'+user.nickname+ '.json').then((response)=>{
             console.log(response);
             const currentDatesStored = [];
             for (const key in response.data) {
@@ -28,18 +32,19 @@ export default function ShowMealPlan() {
             console.log(currentDatesStored);
         
     });
-        const fetchDates = async () => {
-            setIsLoading(true);
-            instance.get('/meal-plans.json').then((response)=>{
-                console.log(response);
+    //     const fetchDates = async () => {
+    //         setIsLoading(true);
+    //         instance.get('/meal-plans.json').then((response)=>{
+    //             console.log(response);
             
-        });
-    }
+    //     });
+    // }
         const fetchMealPlan = async () => {
             setIsLoading(true);
             const date = dateState;
-            instance.get('/meal-plans/' + date + '.json').then((response)=>{
+            instance.get('/meal-plans/'+ user.nickname + '/' + date + '.json').then((response)=>{
                 const loadedMealPlans = [];
+                console.log(response)
                 
                 for (const key in response.data) {
                     loadedMealPlans.push({ ...response.data[key], id:key});

@@ -3,7 +3,7 @@ import { Accordion } from 'react-bootstrap';
 
 const BillCompare = () => {
     return(
-        <div className={classes.page}>
+        <div style={{padding: '15rem'}}>
             <Accordion >
                 <Accordion.Item eventKey="0">
                     <Accordion.Header>Gas Price</Accordion.Header>

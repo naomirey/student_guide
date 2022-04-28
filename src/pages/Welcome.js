@@ -2,47 +2,45 @@ import classes from './Welcome.module.css';
 import { Carousel } from 'react-bootstrap';
 
 const Welcome = () => {
-    return(
-        <div className={classes.page}>
+   return(
+        <div style={{padding: '10rem'}}>
             <Carousel>
             <Carousel.Item>
                 <img
                 className="d-block w-100"
-                src="/Users/naomireynolds/student_guide/src/doggo.jpg"
-                alt="First slide"
+                src="slide.jpg"
+                alt="Welcome!"
+                width="auto"
                 />
                 <Carousel.Caption>
-                <h3>First slide label</h3>
-                <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+                <h3 className={classes.header}>Welcome to the Student Guide to Moving Out</h3>
                 </Carousel.Caption>
             </Carousel.Item>
             <Carousel.Item>
                 <img
                 className="d-block w-100"
-                src="/Users/naomireynolds/student_guide/src/doggo.jpg"
+                src="slide.jpg"
                 alt="Second slide"
                 />
-
                 <Carousel.Caption>
                 <h3>Second slide label</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                 </Carousel.Caption>
             </Carousel.Item>
-            <Carousel.Item>
-                <img
-                className="d-block w-100"
-                src="/Users/naomireynolds/student_guide/src/doggo.jpg"
-                alt="Third slide"
-                />
-
-                <Carousel.Caption>
-                <h3>Third slide label</h3>
-                <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-                </Carousel.Caption>
-            </Carousel.Item>
-            </Carousel>
+            </Carousel>        
         </div>
     )
 }
 
+
+
+// const Welcome = () => {
+//     const { loginWithRedirect } = useAuth0();
+  
+//     return (
+//     <div style={{padding: '20rem'}}>
+//          <button onClick={() => loginWithRedirect()}>Log In</button>;
+//     </div>
+//     )
+   
+//   };
 export default Welcome;

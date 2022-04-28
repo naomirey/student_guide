@@ -2,9 +2,9 @@ import { Card, ProgressBar, Button } from 'react-bootstrap';
 import Stack from '@mui/material/Stack';
 import { currencyFormatter } from '../utils';
 
-export default function BudgetCard({ name, amount, max, grey, onAddExpenseClick, hideButtons, onViewExpenseClick }) {
-
+export default function BudgetCard({ name, amount, max, grey, onAddExpenseClick, hideButtons, onViewExpenseClick, deleteItem, id, itemName, showMessage}) {
     const classNames = [];
+    const ratio = amount / max;
 
     if (amount > max) {
         classNames.push("bg-danger", "bg-opacity-10")
@@ -14,17 +14,17 @@ export default function BudgetCard({ name, amount, max, grey, onAddExpenseClick,
     }
 
     const getProgressBarVariant = (amount, max) => {
-        const ratio = amount / max;
         if (ratio < .5) return "primary"
         if (ratio < .75) return "warning"
         return "danger"
 
     }
     return (
-        <Card className={classNames.join(" ")}>
+        <Card style = {{padding: '20px'}}>
             <Card.Body>
-                <Card.Title className="d-flex justify-content-between 
-                align-items-baseline fw-normal mb-3">
+                <Card.Title className="d-flex mb-3">
+                {/* justify-content-between 
+                align-items-baseline fw-normal */}
                     <div className="me-2">{name}</div>
                     <div className="d-flex align-items-baseline ">
                         {currencyFormatter.format(amount)} 
@@ -33,9 +33,14 @@ export default function BudgetCard({ name, amount, max, grey, onAddExpenseClick,
                                 / {currencyFormatter.format(max)}
                             </span> 
                         )}
-                        </div>
+                    </div>
                 </Card.Title>
-                {max && (
+                {deleteItem && 
+                    <div style={{position: 'absolute', right: '0'}}>
+                        <Button onClick={()=>deleteItem(id, itemName)}>X</Button>
+                    </div>
+                }
+                {max > 0 && (
                     <ProgressBar 
                         className="rounded-pill" 
                         variant={getProgressBarVariant(amount,max)}
@@ -44,12 +49,17 @@ export default function BudgetCard({ name, amount, max, grey, onAddExpenseClick,
                         now={amount}
                     />
                 )}
-                {!hideButtons && (
-                <Stack direction="row" gap="2" className="mt-4">
-                    <Button variant="outline-primary" className="ms-auto" onClick={onAddExpenseClick}>Add Expense</Button>
-                    <Button variant="outline-secondary" onClick={onViewExpenseClick}>View Expenses</Button>
-                </Stack>
-                )}
+                {showMessage && (
+                ratio < .5 ? 
+                    <h4>You've spent less than half your budget <br/>
+                    Save {currencyFormatter.format(parseInt(max) - parseInt(amount))} </h4>
+                : ratio < .75 ?
+                    <h4>You've spent over half your budget <br/>
+                    Save {currencyFormatter.format(parseInt(max) - parseInt(amount))} </h4>
+                :
+                    <h4>You've less than 25% of your budget left <br/>
+                    Save {currencyFormatter.format(parseInt(max) - parseInt(amount))} </h4>)}
+             
             </Card.Body>
         </Card>
     )

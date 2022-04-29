@@ -153,7 +153,7 @@ const BlogsStored = (props) => {
             <Link to={`/blog/${blog.id}`} style={{ textDecoration: 'none' }}>
                 <Card>
                     <div className={classes.blogPost}>
-                        <div>{blog.blog}</div>
+                        <div style={{fontSize:"20px"}}>{blog.blog}</div>
                         <div>Posted {blog.date} by {blog.name} ({blog.user}) </div>
                         <h4>{blog.category}</h4>
                     </div>

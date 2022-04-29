@@ -23,7 +23,7 @@ const Welcome = () => {
                 alt="Second slide"
                 />
                 <Carousel.Caption>
-                <h3>Second slide label</h3>
+                <h3>Get ready for some helpful tips and planning ideas!</h3>
                 </Carousel.Caption>
             </Carousel.Item>
             </Carousel>        

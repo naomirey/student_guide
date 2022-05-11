@@ -11,7 +11,7 @@ export default function AddMeal(props) {
     });
     const mealInput = useRef();
     const ingredientsInput = useRef();
-    const refreshPage = ()=>{
+    const refreshPage = () => {
         window.location.reload();
      }
     const postMeal = () => {
@@ -21,7 +21,7 @@ export default function AddMeal(props) {
             instance.post('/meals/.json', formData).then((response)=>{
             if (response.statusText == "OK") {
                 refreshPage();
-                alert("Added Successfully")
+                alert("Added Meal Successfully")
                 console.log("success")
             } else{
                 alert("Error")
@@ -48,14 +48,6 @@ export default function AddMeal(props) {
         console.log("success")
     }
    
-    // const confirmMealAdded =
-    //     <Modal>
-    //         <div>
-    //             <label>Added successfully added!</label>
-    //             <button onClick={refreshPage} className={classes['button']}>Close</button>
-    //         </div>
-    //     </Modal>
-
     return (
         <>
             <Form>

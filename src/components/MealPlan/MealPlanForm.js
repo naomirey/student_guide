@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Modal from '../Modal';
-import { Button, Form, Col, Row, Table } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import MealFormTable from './MealFormTable';
 import AddMeal from './AddMeal';
 
@@ -11,19 +11,11 @@ export default function MealPlanForm() {
     const [httpError, setHttpError] = useState([]);
     const [showForm, setShowForm] = useState(false);
     const [showAddMeal, setShowAddMeal] = useState(false);
-    // const response = await fetch('https://student-guide-meal-planner-default-rtdb.firebaseio.com/meal-plans/2022-04-29.json', {
-    //     method: 'PUT',
-    //     body: JSON.stringify({
-    //         breakfast: formData.breakfast,
-    //         lunch: formData.lunch,
-    //         dinner: formData.dinner
-    //     })
-    // });
-
+ 
     useEffect(() => {
         const fetchMeals = async () => {
             setIsLoading(true);
-            const response = await fetch('https://student-guide-meal-planner-default-rtdb.firebaseio.com/meals.json');
+            const response = await fetch('https://student-guide-8b721-default-rtdb.firebaseio.com/meal-planner/meals.json');
             const responseData = await response.json();
 
             if (!response.ok) {

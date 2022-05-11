@@ -1,24 +1,28 @@
 import classes from './Blog.module.css';
 import React, { useState, useEffect } from 'react';
-import Card from './../components/Card';
+import Title from './../components/Title';
 import BlogFormInput from '../components/Blog/BlogFormInput';
 import Modal from './../components/Modal';
 import { Link } from 'react-router-dom';
-import { Button } from 'react-bootstrap';
+import { Button, Card } from 'react-bootstrap';
 import { useAuth0 } from "@auth0/auth0-react";
 import blogInstance from "./../firebase/blogInstance";
 
-const BlogsStored = (props) => {
+
+const BlogsStored = () => {
     const [blogs, setBlogs] = useState([]);
     const [isDataLoading, setIsLoading] = useState(false);
     const [httpError, setHttpError] = useState(null);
     const [addBlog, setAddBlog] = useState(false);
     const [isAddingBlog, setIsAddingBlog] = useState(false);
     const [didAddBlog, setDidAddBlog] = useState(false);
-    const [categoryState, setCategoryState] = useState("All Blogs");
+    const [categoryState, setCategoryState] = useState("all blogs");
     const { isAuthenticated, isLoading, user } = useAuth0();
     const [currentCategory, setCurrentCategory] = useState()
     const [currentList, setCurrentList] = useState([]);
+    const [addLike, setAddLike] = useState(false);
+    const [updateLikes, setUpdateLikes] = useState();
+
     const refreshPage = ()=>{
         window.location.reload();
      }
@@ -29,11 +33,15 @@ const BlogsStored = (props) => {
 
     const hideAddBlogHandler = () => {
         setAddBlog(false);
+        
     }
 
-    // const hideConfirmHandler = () => {
-    //     setDidAddBlog(false);
-    // }
+    const addLikeHandler = (props) => {
+        setAddLike(!addLike);
+        setUpdateLikes(props);
+        console.log(addLike)
+        console.log(updateLikes);
+    }
 
     const submitBlogHandler = async (blogData) => {
         console.log(user)
@@ -41,14 +49,6 @@ const BlogsStored = (props) => {
         setIsAddingBlog(false);
         const response = await blogInstance.post('.json', blogData).then((response) =>
         console.log(response))
-            // method: 'POST',
-            // body: JSON.stringify({
-            //     id: blogData.id,
-            //     name: blogData.name,
-            //     blog: blogData.blog,
-            //     date: blogData.date
-            // })
-        // });
         setIsAddingBlog(false);
         setDidAddBlog(true);
         setAddBlog(false);
@@ -61,21 +61,10 @@ const BlogsStored = (props) => {
             for (const key in response.data) {
                 currentBlogsStored.push({...response.data[key], id:key});
                 setBlogs(currentBlogsStored)  
-                // if (key.category === categoryState){
-                //     currentBlogsStored.push({...response.data[key], id:key});
-                //     console.log(key.category)
-                // };
-                const categorySelected = [];
-                currentBlogsStored.filter(blogSave => blogSave.category === categoryState).map(filteredBlogs => (
-                    categorySelected.push(filteredBlogs)
-                    ));
                 
-            console.log(categorySelected) 
-            setCurrentCategory(categorySelected);
-            setIsLoading(false);
-            console.log(currentCategory);
         }})
-        if (categoryState === "All Blogs"){
+    
+        if (categoryState === "all blogs"){
             setCurrentList(blogs);
             console.log(currentList)
         }
@@ -86,51 +75,33 @@ const BlogsStored = (props) => {
                     ));
                 setCurrentList(categorySelected)
         }
-        // currentBlogsStored.push({...response.data[key], id:key});
-        
-        // const fetchBlogs = async () => {
-        //     setIsLoading(true);
-        
-        //     const response = await fetch('https://student-moving-out-guide-default-rtdb.firebaseio.com/blog_posts.json');
-        //     const responseData = await response.json();
+        console.log(categoryState)
 
-        //     if (!response.ok) {
-        //         throw new Error('Something went wrong!')
-                
-        //     }
-
-        //     const loadedBlogs = [];
-            
-        //     for (const key in responseData) {
-        //         loadedBlogs.push({
-        //             key: key,
-        //             id: key,
-        //             name: responseData[key].name,
-        //             user: responseData[key].user,
-        //             blog: responseData[key].blog,
-        //             category: responseData[key].category,
-        //             date: responseData[key].date,
-        //         });
-        //     }
-        //     setBlogs(loadedBlogs);
-        //     setIsLoading(false);
-        //     console.log(blogs);
-        // };
-        // if (categoryState === "All Blogs"){
-        //     setCurrentList(blogs);
-        //     console.log(currentList)
-        // }
-        // else{
-        //     setCurrentList(currentCategory);
-        //     console.log(currentList)
-        // }
-
-        // fetchBlogs().catch((error) => {
-        // setIsLoading(false);
-        // setHttpError(error.message);
-        // });
-        // console.log(categoryState)
-    }, [categoryState]);
+        if (addLike === false){
+            blogInstance.get(updateLikes+ '.json').then((response)=>{
+                let currentLikes = 0;
+                currentLikes = parseInt(response.data.likes) + 1;
+                console.log(currentLikes)
+                const likeData = ({likes:currentLikes})
+                blogInstance.patch(updateLikes+ '.json', likeData).then((response)=>{
+                    console.log(response)
+                })
+            })
+        }
+        if (addLike === true){
+            blogInstance.get(updateLikes+ '.json').then((response)=>{
+                let currentLikes = 0;
+                currentLikes = parseInt(response.data.likes) - 1;
+                console.log(currentLikes)
+                const likeData = ({likes:currentLikes})
+                blogInstance.patch(updateLikes+ '.json', likeData).then((response)=>{
+                    console.log(response)
+                })
+            })
+        }
+        setIsLoading(false);
+  
+    }, [categoryState, addLike]);
 
     if (isDataLoading) { 
         return (
@@ -150,28 +121,52 @@ const BlogsStored = (props) => {
 
     const blogsList = currentList.map((blog) => (
         <div key={blog.id}>
-            <Link to={`/blog/${blog.id}`} style={{ textDecoration: 'none' }}>
-                <Card>
+            <Card style={{padding:"20px", borderRadius: "50px"}}>
+                <Link to={`/blog/${blog.id}`} style={{ textDecoration: 'none' }}>
+                    
                     <div className={classes.blogPost}>
-                        <div style={{fontSize:"20px"}}>{blog.blog}</div>
-                        <div>Posted {blog.date} by {blog.name} ({blog.user}) </div>
-                        <h4>{blog.category}</h4>
+                        <div style={{fontSize:"20px"}}>
+                            <h4>{blog.blogTitle}</h4>
+                        </div>
+                        <div>Posted {blog.date}</div>
+                        <div> by {blog.name} ({blog.user}) </div>
+                        <h5>{blog.category}</h5>
                     </div>
-                </Card>
-            <div className={classes.blank} />
-            </Link>
+                </Link>
+                {isAuthenticated ?
+                    <div style={{textAlign: "right"}} >
+                        <Button onClick={()=>addLikeHandler(blog.id)} style={{backgroundColor:"white"}} >
+                            <h2>
+                                {blog.likes}
+                                <img style={{height:"30px", width:"30px"}}src={"likee.png"}>
+                                </img>
+                            </h2>
+                        </Button>
+                    </div>
+                    :
+                    <div style={{textAlign: "right"}}>
+                        <h2>
+                            {blog.likes}
+                            <img style={{height:"30px", width:"30px"}}src={"likee.png"}>
+                            </img>
+                        </h2>
+                    </div>
+                    }
+            </Card>
         </div>
     ));
     const confirmAddBlog =
         <Modal>
             <div>
                 <label>Blog was successfully added!</label>
-                <button onClick={refreshPage} className={classes['button']}>Close</button>
+                <Button onClick={refreshPage}>Close</Button>
             </div>
         </Modal>
 
     return (
-        <div style={{padding: '15rem'}}>
+        <>
+        <Title>Blog Page</Title>
+        <div style={{padding: '20rem'}}>
             <section>
             <div className={classes.blank} />
             <select 
@@ -181,19 +176,19 @@ const BlogsStored = (props) => {
                         const selectedCategory = e.target.value
                         setCategoryState(selectedCategory)
                     }}>
-                    <option defaultValue="all blogs">All Blogs</option>
+                    <option defaultValue="all blogs" value="all blogs">All Blogs</option>
                     <option value="money advice">Money Advice</option>
                     <option value="student life">Student Life</option>
                     <option value="cleaning">Cleaning</option>
                 </select>
                 {isAuthenticated ?
-                <Button className={classes.button} onClick={showAddBlogHandler}>
+                <Button style={{margin:"30px"}} onClick={showAddBlogHandler}>
                     <span>Add Blog Post</span>
                 </Button>
                 : isLoading ?
-                <h3>Loading ..</h3>
+                <h3>Loading .</h3>
                     :
-                <h2>Login to add a blog</h2>
+                <h2>Login to add a blog...</h2>
             }
                 
                 {addBlog && <BlogFormInput onClose={hideAddBlogHandler} onPost={submitBlogHandler}/>}
@@ -204,6 +199,7 @@ const BlogsStored = (props) => {
                 <ul>{blogsList}</ul>
             </section>
         </div>
+        </>
     );
 };
 

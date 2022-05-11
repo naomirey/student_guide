@@ -9,7 +9,6 @@ const isEmpty = value => value.trim() === '';
 export default function MealFormTable(props) {
     const [formInputValid, setFormInputValid] = useState(true);
     const { user } = useAuth0();
-    // const [isAddingMealPlan, setIsAddingMealPlan] = useState(false);
     const dateSelected = useRef();
     const breakfastMon = useRef();
     const lunchMon = useRef();
@@ -72,7 +71,7 @@ export default function MealFormTable(props) {
             instance.put('/meal-plans/'+ user.nickname + '/' + enteredDate + '.json', formData).then((response)=>
             {if (response.statusText == "OK") {
                 refreshPage();
-                alert("Added Successfully")
+                alert("Added Meal Plan Successfully")
                 console.log("success")
             } else{
                 alert("Error")
@@ -363,63 +362,3 @@ export default function MealFormTable(props) {
     )
 }
 
-
-
-    // const date = "2022-04-26";
-    // var mondayMeals =  {
-    //     id: "monday",
-    //     breakfast: "Eggs",
-    //     lunch: "Sandwich",
-    //     dinner: "Soup"
-    // };
-    // var tuesdayMeals = {
-    //     id:"tuesday",
-    //     breakfast: "Sandwich",
-    //     lunch: "Tuna",
-    //     dinner: "Chicken"
-    // };
-
-    //  const submitMealPlan = async () => {
-    //     console.log("here")
-    //     setIsAddingMealPlan(false);
-    //     var formData = new FormData();
-    //     console.log(formData);
-    //     formData.append('Monday',JSON.stringify(mondayMeals));
-    //     formData.append('Tuesday',JSON.stringify(tuesdayMeals));
-    //     console.log(formData);
-    //     for (var key of formData.entries()) {
-    //         console.log(key[0] + ', ' + key[1]);
-    //     }
-
-    //     fetch(('https://student-guide-meal-planner-default-rtdb.firebaseio.com/meal-plans/'+date+'.json',{
-    //         method: 'POST', 
-    //         body: JSON.stringify({
-    //             id: formData.id,
-    //             breakfast: formData.breakfast,
-    //             lunch: formData.lunch,
-    //             dinner: formData.dinner
-    //         })
-    //     }))
-    //     setIsAddingMealPlan(false);
-    // }
-        //     const response = await fetch('https://student-guide-meal-planner-default-rtdb.firebaseio.com/meal-plan' + date + 'json', {
-        //     method: 'POST',
-        //     body: JSON.stringify({
-        //         // id: mealData.Monday,
-        //         // breakfast: mealData.name,
-        //         // lunch: mealData.blog,
-        //         // dinner: mealData.date
-        //         id: date,
-        //         monday: mondayMeals,
-        //         tuesday: tuedayMeals,
-        //     })
-        // });
-        
-
-    // const disablePastDate = () => {
-    //     const today = new Date();
-    //     const dd = String(today.getDate() + 1).padStart(2, "0");
-    //     const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-    //     const yyyy = today.getFullYear();
-    //     return yyyy + "-" + mm + "-" + dd;
-    // };

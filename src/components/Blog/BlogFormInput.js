@@ -1,7 +1,7 @@
 import classes from "./BlogFormInput.module.css";
 import Modal from '../Modal'
 import { useState, useRef } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, } from 'react-bootstrap';
 import { useAuth0 } from "@auth0/auth0-react";
 
 const isEmpty = value => value.trim() === '';
@@ -11,12 +11,14 @@ const BlogFormInput = (props) => {
     const [currentBlogs, setCurrentBlogs] = useState([]);
     const [formInputValid, setFormInputValid] = useState({
         name: true,
+        blogName: true,
         blog: true,
         category: true,
         date: true
     })
 
     const nameInputRef = useRef();
+    const blogNameInputRef = useRef();
     const blogInputRef = useRef();
     const categoryInputRef = useRef();
     const dateInputRef = useRef();
@@ -25,18 +27,20 @@ const BlogFormInput = (props) => {
         event.preventDefault();
 
         const enteredName = nameInputRef.current.value;
+        const enteredBlogName = blogNameInputRef.current.value;
         const enteredBlog = blogInputRef.current.value;
         const enteredCategory = categoryInputRef.current.value;
         const enteredDate = dateInputRef.current.value;
-        console.log(enteredDate);
 
         const enteredNameValid = !isEmpty(enteredName);
+        const enteredBlogNameValid = !isEmpty(enteredBlogName);
         const enteredBlogValid = !isEmpty(enteredBlog);
         const enteredCategoryValid = !isEmpty(enteredCategory);
         const enteredDateValid = !isEmpty(enteredDate);
 
         setFormInputValid({
             name: enteredNameValid,
+            blogName: enteredBlogNameValid,
             blog: enteredBlogValid,
             category: enteredCategoryValid,
             date: enteredDateValid
@@ -44,6 +48,7 @@ const BlogFormInput = (props) => {
 
         const formIsValid = 
             enteredNameValid &&
+            enteredBlogNameValid &&
             enteredBlogValid &&
             enteredCategoryValid &&
             enteredDateValid
@@ -55,15 +60,20 @@ const BlogFormInput = (props) => {
         props.onPost({
             name: enteredName,
             user: user.nickname,
+            blogTitle: enteredBlogName,
             blog: enteredBlog,
             category: enteredCategory,
-            date: enteredDate
+            date: enteredDate,
+            likes: 0
         });
         setCurrentBlogs(enteredNameValid);
     };
     
     const nameControlClasses = `${classes.control} ${
         formInputValid.name ? '' : classes.invalid
+    }`;
+    const blogNameControlClasses = `${classes.control} ${
+        formInputValid.blogName ? '' : classes.invalid
     }`;
     const blogControlClasses = `${classes.control} ${
         formInputValid.blog ? '' : classes.invalid
@@ -78,13 +88,18 @@ const BlogFormInput = (props) => {
     const BlogForm = 
         <form className={classes.form} onSubmit={postBlogHandler}>
             <div className={nameControlClasses}>
-                <label htmlFor='name'>Your Name</label>
+                <label htmlFor='name'>Author Name</label>
                 <input type='text' id='name' ref={nameInputRef} />
                 {!formInputValid.name && <p>Error enter name</p>}
             </div>
+            <div className={blogNameControlClasses}>
+                <label htmlFor='name'>Blog Title</label>
+                <input type='text' id='name' ref={blogNameInputRef} />
+                {!formInputValid.blogName && <p>Error enter blog title</p>}
+            </div>
             <div className={blogControlClasses}>
                 <label htmlFor='blog'>Blog</label>
-                <input type='text' id='blog' ref={blogInputRef} />
+                <input type='text' id='blog' ref={blogInputRef} style={{height:"7rem"}}/>
                 {!formInputValid.blog && <p>Error enter your blog post</p>} 
             </div>
             <div className={categoryControlClasses}>
@@ -102,8 +117,8 @@ const BlogFormInput = (props) => {
                 {!formInputValid.date && <p>Error enter a date</p>}
             </div>
             <div className={classes.actions}>
-                <Button onClick={props.onClose} className={classes['button--alt']}>Close</Button>
-                <Button onClick={postBlogHandler} className={classes.submit}>Post</Button>
+                <Button onClick={props.onClose} >Close</Button>
+                <Button onClick={postBlogHandler}>Post</Button>
             </div>
         </form>
 

@@ -1,5 +1,5 @@
 import axios from 'axios';
 
 export default axios.create({
-    baseURL: "https://student-moving-out-guide-default-rtdb.firebaseio.com/blog_posts"
+    baseURL: "https://student-guide-8b721-default-rtdb.firebaseio.com/blog/blog_posts"
 })

@@ -4,6 +4,13 @@
     width: 90%;
     margin: 2rem auto;
     animation: page-appear 1s ease-out forwards;
+    background-color: white !important;
+    
+}
+.div{
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .page ul {
@@ -51,6 +58,7 @@ color: red;
 
   .heading {
       font-weight: bold;
+      background-color: #c95555;
   }
 
 @keyframes page-appear {
@@ -65,3 +73,4 @@ color: red;
     }
   }
   
+

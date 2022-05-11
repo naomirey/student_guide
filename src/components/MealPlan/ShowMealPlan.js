@@ -1,9 +1,7 @@
 import React from 'react'
-import Link, { useState, useEffect, Button } from 'react';
-import Card from '../../components/Card';
-import { Table, DropdownButton, Dropdown, Form } from 'react-bootstrap';
+import { useState, useEffect } from 'react';
+import { Table} from 'react-bootstrap';
 import instance from '../../firebase/instance';
-import { ImageListItemBar } from '@mui/material';
 import { useAuth0 } from "@auth0/auth0-react";
 
 
@@ -32,13 +30,7 @@ export default function ShowMealPlan() {
             console.log(currentDatesStored);
         
     });
-    //     const fetchDates = async () => {
-    //         setIsLoading(true);
-    //         instance.get('/meal-plans.json').then((response)=>{
-    //             console.log(response);
-            
-    //     });
-    // }
+
         const fetchMealPlan = async () => {
             setIsLoading(true);
             const date = dateState;
@@ -66,20 +58,7 @@ export default function ShowMealPlan() {
         </section>
         );
     }
-    
-    // const currentMealList = currentMeals.map((meal, index) => (
-    //     <div>
-    //         <Card>
-    //             <div>
-    //                 <ul key={index}>{meal.name}</ul>
-    //             </div>
-    //         </Card> 
-    //     <div />
-    //     </div>
-    // ));
-    
-    // const dateList = currentDates.map((date) => (date));
-    
+ 
     return (
         <div>
             <div className = "container p-2">
@@ -127,67 +106,3 @@ export default function ShowMealPlan() {
         </div>
     )
 }
-
-
-
-// const response = await fetch('https://student-guide-meal-planner-default-rtdb.firebaseio.com/meal-plans/' + date + '.json');
-                // const responseData = await response.json();
-                // if (!response.statusText ==="OK") {
-                //     throw new Error('Something went wrong!') 
-                // }
-            
-                // const loadedMealPlans = [];
-                
-                // for (const key in response.data) {
-                //         loadedMealPlans.push({
-                //             key: key,
-                //             id: key,
-                //             day: response[key].day,
-                //             breakfast: response[key].breakfast,
-                //             lunch: response[key].lunch,
-                //             dinner: response[key].dinner,
-                //         });
-                //     }
-                //     setCurrentMealPlans(loadedMealPlans);
-                //     setIsLoading(false);
-                //     console.log(currentMealPlans);
-                //     console.log(loadedMealPlans)
-                //     });
-                // };
-            
-
-
-                // const responseData = await response.json();
-            // if (!response.ok) {
-            //     throw new Error('Something went wrong!') 
-            // }
-            // const loadedDates = [];
-            // for (const key in responseData) {
-            //     loadedDates.push({
-            //         key:key,
-            //         id:key
-            //     });
-            // }
-            // setCurrentDates(loadedDates);
-            // setIsLoading(false);
-        // }
-        // fecthDates().catch((error) => {
-        //     setIsLoading(false);
-        //     setHttpError(error.message);
-
-
-                         // const response = await fetch('https://student-guide-meal-planner-default-rtdb.firebaseio.com/meal-plans/' + date + '.json');
-                // const responseData = await response.json();
-                // if (!response.statusText ==="OK") {
-                //     throw new Error('Something went wrong!') 
-                // }
-
-
-                // loadedMealPlans.push({
-                        //     key: key,
-                        //     id: key,
-                        //     day: response[key].day,
-                        //     breakfast: response[key].breakfast,
-                        //     lunch: response[key].lunch,
-                        //     dinner: response[key].dinner,
-                        // });

@@ -1,9 +1,11 @@
-import classes from './BillCompare.module.css';
 import { Accordion } from 'react-bootstrap';
+import Title from "../components/Title";
+
 
 const BillCompare = () => {
     return(
-        <div style={{padding: '15rem'}}>
+        <div style={{padding: '20rem'}}>
+            <Title>Bill Comparison</Title>
             <Accordion >
                 <Accordion.Item eventKey="0">
                     <Accordion.Header>Gas Price</Accordion.Header>

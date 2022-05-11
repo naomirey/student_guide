@@ -9,11 +9,9 @@ export default function ViewBudgetCalc() {
     const [isLoading, setIsLoading] = useState(true);
     const [expenses, setExpenses] = useState([]);
     const [income, setIncome] = useState([]);
-    const [budgets, setBudgets] = useState([]);
     const [addItem, setAddItem] = useState(false);
     const [addName, setAddName] = useState("");
     const { user } = useAuth0();
-    const [message, setMessage] = useState("");
 
     const refreshPage = ()=>{
         window.location.reload();
@@ -42,31 +40,25 @@ export default function ViewBudgetCalc() {
         });
 
     }, []);
-    // const deleteExpense = (expenseId) => {
-    //     console.log(expenseId);
-    //     budgetInstance.delete('/expenses/'+ expenseId +'/.json').then((response) => {
-    //         console.log(response);
-    //     })
-    //     // setExpenses(expenses.filter(expense => expense.expenseId !== expenseId))
-    // }
+    
     const deleteItem = (id, itemName) => {
         console.log(id);
         budgetInstance.delete(user.nickname+'/'+ itemName+'/'+ id +'/.json').then((response) => {
-            refreshPage()
-            alert("Successfully Deleted")
-            console.log(response);
+            if (response.statusText == "OK") {
+                refreshPage();
+                alert(itemName + "deleted successfully!")
+            } else{
+                alert("Error")
+            }
         })
     }
   
-    let expensesMax = 0;
+    let expensesMax = parseInt(0);
     expenses.map(({amount}) => (
-        console.log(amount),
-        expensesMax = parseInt(expensesMax)+parseInt(amount)
-        
+        expensesMax = parseInt(expensesMax)+parseInt(amount)        
     ))
-    let incomeMax = 0;
+    let incomeMax = parseInt(0);
     income.map(({amount}) => (
-        console.log(amount),
         incomeMax = parseInt(incomeMax)+parseInt(amount)
         
     ))
@@ -83,7 +75,6 @@ export default function ViewBudgetCalc() {
         console.log(addName);
     }
 
-    let itemName = "";
     return (
         <div style={{display:'flex', flexDirection:'row'}}>
             <div style={{ marginLeft: '40px' }} >

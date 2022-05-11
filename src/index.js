@@ -5,7 +5,6 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import { BudgetProvider } from './context/BudgetContext';
 import { Auth0Provider } from "@auth0/auth0-react";
 
 
@@ -17,9 +16,7 @@ ReactDOM.render(
   >
     <React.StrictMode>
       <BrowserRouter>
-      {/* <BudgetProvider> */}
         <App />
-      {/* </BudgetProvider> */}
       </BrowserRouter>
     </React.StrictMode>
   </Auth0Provider>

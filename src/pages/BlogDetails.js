@@ -1,11 +1,12 @@
 import { useParams } from 'react-router-dom';
-import classes from './BlogDetails.module.css';
 import { useState, useEffect } from 'react';
-import Card from './../components/Card';
 import DeleteBlog from '../components/Blog/DeleteBlog';
 import Modal from './../components/Modal';
 import { Link } from 'react-router-dom';
-import BlogFormInput from '../components/Blog/BlogFormInput'
+import BlogFormInput from '../components/Blog/BlogFormInput';
+import Title from './../components/Title';
+import { Button, Card } from 'react-bootstrap';
+import { useAuth0 } from "@auth0/auth0-react";
 
 
 const BlogDetails = () => {
@@ -17,7 +18,7 @@ const BlogDetails = () => {
     const [didDelete, setDidDelete] = useState(false);
     const [didUpdate, setDidUpdate] = useState(false);
     const [editBlogModal, setEditBlogModal] = useState(false);
-    
+    const { user, isAuthenticated } = useAuth0();
 
     const params = useParams();
 
@@ -44,7 +45,7 @@ const BlogDetails = () => {
     // find this is fetch request for loading meals or in the http module
     const deleteBlog = async () => {
         setIsDeleting(true);
-        const response = await fetch('https://student-moving-out-guide-default-rtdb.firebaseio.com/blog_posts/' + params.blogID + '.json', {
+        const response = await fetch('https://student-guide-8b721-default-rtdb.firebaseio.com/blog/blog_posts/' + params.blogID + '.json', {
             method: 'DELETE',
         })
         setIsDeleting(false);
@@ -54,12 +55,16 @@ const BlogDetails = () => {
     }
 
     const editBlogHandler = (blogData) => {
-         fetch('https://student-moving-out-guide-default-rtdb.firebaseio.com/blog_posts/' + params.blogID + '.json', {
+         fetch('https://student-guide-8b721-default-rtdb.firebaseio.com/blog/blog_posts/' + params.blogID + '.json', {
             method: 'PUT',
             body: JSON.stringify({
                 name: blogData.name,
+                blogTitle: blogData.blogTitle,
+                category: blogData.category,
+                user: user.nickname,
                 blog: blogData.blog,
-                date: blogData.date
+                date: blogData.date,
+                likes: 0
             })
         })
         setEditBlogModal(false);
@@ -69,7 +74,7 @@ const BlogDetails = () => {
     useEffect(() => {
         const fetchBlogs = async () => {
         setIsLoading(true);
-        const response = await fetch('https://student-moving-out-guide-default-rtdb.firebaseio.com/blog_posts/'+ params.blogID + '.json');
+        const response = await fetch('https://student-guide-8b721-default-rtdb.firebaseio.com/blog/blog_posts/'+ params.blogID + '.json');
         const responseData = await response.json();
 
         if (!response.ok) {
@@ -84,6 +89,7 @@ const BlogDetails = () => {
                 key: key,
                 id: key,
                 name: responseData[key].name,
+                blogTitle: responseData[key].blogTile,
                 blog: responseData[key].blog,
                 date: responseData[key].date,
             });
@@ -101,36 +107,58 @@ const BlogDetails = () => {
     const deletedModalContent =
     <Modal>
             <div>
-                <label>{blogs.name} deleted successfully.</label>
+                <label>{blogs.blogTitle} deleted successfully.</label>
                 <Link to={`/blog`}>
-                    <button className={classes['button']}>Close</button>
+                    <Button>Close</Button>
                 </Link>
             </div>
         </Modal>
     const editModalContent =
     <Modal>
             <div>
-                <label>{blogs.name} edited successfully.</label>
+                <label>{blogs.blogTitle} edited successfully.</label>
                 <Link to={`/blog`}>
-                    <button onClick={refreshPage} className={classes['button']}>Close</button>
+                    <Button onClick={refreshPage} >Close</Button>
                 </Link>
             </div>
         </Modal>
 
     return(
-        <div className={classes.page}>
+        <div style={{padding: '20rem'}}>
+            <Title>Blog Details </Title>
             <Card>
-                <p>{blogs.blog}</p>
-                <p>Posted By {blogs.name} on the {blogs.date} </p>
+                {isAuthenticated ? 
+                <>
+                    <div style={{padding:"100px"}}>
+                        <h2>{blogs.blogTitle}</h2>
+                        <p>{blogs.blog}</p>
+                        <p>Posted By {blogs.name} on the {blogs.date} </p>
+                    </div>
+                    <div style={{padding:"20px", justifyContent:"center"}}>
+                        <Button onClick={showDeleteHandler}>
+                            <span>Delete</span>
+                        </Button>
+                        {deleteBlogModal && <DeleteBlog onClose={hideDeleteHandler} blogTitle={blogs.blogTitle} delete={deleteBlog}/>}
+                        {didDelete && deletedModalContent}
+                        <Button onClick={showEditHandler}>
+                                <span>Edit</span>
+                        </Button>
+                    </div> 
+                    </>
+                    :
+                    <>
+                    <div style={{padding:"100px"}}>
+                        <h2>{blogs.blogTitle}</h2>
+                        <p>{blogs.blog}</p>
+                        <p>Posted By {blogs.name} on the {blogs.date} </p>
+                    </div>
+                    </>
+                    }
+                
             </Card>
-            <button className={classes.button} onClick={showDeleteHandler}>
-                    <span>Delete</span>
-            </button>
-            {deleteBlogModal && <DeleteBlog onClose={hideDeleteHandler} blogName={blogs.name} delete={deleteBlog}/>}
-            {didDelete && deletedModalContent}
-            <button className={classes.button} onClick={showEditHandler}>
-                    <span>Edit</span>
-            </button>
+            <div style={{justifyContent:"center", margin:"20px", display: "flex"}}>
+                <Button href='/blog'> - Return to Blogs - </Button>
+            </div>
             {editBlogModal && <BlogFormInput onClose={hideEditHandler} onPost={editBlogHandler} 
             currentName={blogs.name}
             currentDate={blogs.date}

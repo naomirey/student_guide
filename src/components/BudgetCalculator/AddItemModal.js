@@ -5,7 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 const isEmpty = value => value.trim() === '';
 
-export default function AddItemModal({ showExpense, handleClose, handleSubmit, showItem, itemName }) {
+export default function AddItemModal({  handleClose, handleSubmit, showItem, itemName }) {
     const [formInputValid, setFormInputValid] = useState({
         amount:true,
         description:true
@@ -17,9 +17,6 @@ export default function AddItemModal({ showExpense, handleClose, handleSubmit, s
         window.location.reload();
      }
 
-    // const budgetIdRef = useRef();
-    // const { addExpense, budgets } = useBudgets();
-    
     const postItem = () => {
         const enteredDescription= descriptionRef.current.value;
         const enteredAmount = amountRef.current.value;
@@ -27,8 +24,7 @@ export default function AddItemModal({ showExpense, handleClose, handleSubmit, s
             budgetInstance.post('/'+user.nickname+'/'+ itemName +'/.json', formData).then((response) => {
             if (response.statusText == "OK") {
                 refreshPage();
-                alert("Added Successfully")
-                console.log("success")
+                alert("Added " + itemName + " successfully")
             } else{
                 alert("Error")
             }
@@ -55,11 +51,6 @@ export default function AddItemModal({ showExpense, handleClose, handleSubmit, s
         });
     
     }
-    // const handleExpenseSubmit = (formData) => {
-    //     budgetInstance.post('/expenses/.json', formData).then((response) =>{
-    //         console.log(response);
-    //     })
-    // }
     
     return (
         <Modal show={showItem} onHide={handleClose}>
@@ -90,24 +81,3 @@ export default function AddItemModal({ showExpense, handleClose, handleSubmit, s
     </Modal>
     )
 }
-
-
-
-
-{/* <Form.Group className = "mb-3" controlId = "description">
-                        <Form.Label>Description</Form.Label>
-                        <Form.Control type="text" required ref={descriptionRef} />
-                    </Form.Group>
-                    <Form.Group className = "mb-3" controlId = "amount">
-                        <Form.Label>Amount</Form.Label>
-                        <Form.Control
-                            ref={amountRef}
-                            type="number"
-                            required
-                            min={0}
-                            step={5}
-                        />
-                    </Form.Group>
-                    <div className="d-flex justify-content-end">
-                        <Button variant="primary" type="submit">Add</Button>
-                    </div> */}

@@ -1,7 +1,6 @@
  .form {
     margin: 1rem 0;
-    height: 19rem;
-    overflow: scroll;
+    height: 26rem;
   }
 
   .control {
@@ -29,8 +28,6 @@
   .actions button {
     font: inherit;
     cursor: pointer;
-    background-color: transparent;
-    border: 1px solid #c9481d;
     padding: 0.5rem 2rem;
     border-radius: 25px;
     margin-left: 1rem;
@@ -38,8 +35,8 @@
   
   .actions button:hover,
   .actions button:active {
-    background-color: #e4551c;
-    border-color: #b37b65;
+    background-color: #314de7;
+    border-color: #314de7;
     color: white;
   }
   

@@ -1,8 +1,7 @@
 import { Card, ProgressBar, Button } from 'react-bootstrap';
-import Stack from '@mui/material/Stack';
 import { currencyFormatter } from '../utils';
 
-export default function BudgetCard({ name, amount, max, grey, onAddExpenseClick, hideButtons, onViewExpenseClick, deleteItem, id, itemName, showMessage}) {
+export default function BudgetCard({ name, amount, max, grey, deleteItem, id, itemName, showMessage}) {
     const classNames = [];
     const ratio = amount / max;
 
@@ -23,16 +22,19 @@ export default function BudgetCard({ name, amount, max, grey, onAddExpenseClick,
         <Card style = {{padding: '20px'}}>
             <Card.Body>
                 <Card.Title className="d-flex mb-3">
-                {/* justify-content-between 
-                align-items-baseline fw-normal */}
                     <div className="me-2">{name}</div>
                     <div className="d-flex align-items-baseline ">
-                        {currencyFormatter.format(amount)} 
-                        {max && (
+                        {!max ?
+                        <>
+                        {currencyFormatter.format(amount)}
+                        </>:
+                        <>
+                        {currencyFormatter.format(amount)}
                             <span className="text-muted fs-6 ms-1">
                                 / {currencyFormatter.format(max)}
                             </span> 
-                        )}
+                        </>
+                        }
                     </div>
                 </Card.Title>
                 {deleteItem && 
@@ -40,7 +42,8 @@ export default function BudgetCard({ name, amount, max, grey, onAddExpenseClick,
                         <Button onClick={()=>deleteItem(id, itemName)}>X</Button>
                     </div>
                 }
-                {max > 0 && (
+                {max > 0 && amount > 0 && 
+                <>
                     <ProgressBar 
                         className="rounded-pill" 
                         variant={getProgressBarVariant(amount,max)}
@@ -48,7 +51,7 @@ export default function BudgetCard({ name, amount, max, grey, onAddExpenseClick,
                         max={max}
                         now={amount}
                     />
-                )}
+                
                 {showMessage && (
                 ratio < .5 ? 
                     <h4>You've spent less than half your budget <br/>
@@ -56,14 +59,16 @@ export default function BudgetCard({ name, amount, max, grey, onAddExpenseClick,
                 : ratio < .75 ?
                     <h4>You've spent over half your budget <br/>
                     Save {currencyFormatter.format(parseInt(max) - parseInt(amount))} </h4>
-                :
+                : ratio < 1 ?
                     <h4>You've less than 25% of your budget left <br/>
-                    Save {currencyFormatter.format(parseInt(max) - parseInt(amount))} </h4>)}
+                    Save {currencyFormatter.format(parseInt(max) - parseInt(amount))} </h4>
+                :<h4>You're spending more than you earn! <br/>Looks like you need to cut back on some expenses or increase your income. <br/><br/>
+                    {currencyFormatter.format(Math.abs(parseInt(max) - parseInt(amount)))} over budget </h4>
+                )}
+                </>
+                }
              
             </Card.Body>
         </Card>
     )
 }
-
-//ms-1 = margin of 1
-//fs-6 = font size 6

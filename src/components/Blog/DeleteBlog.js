@@ -1,15 +1,15 @@
 import Modal from '../Modal'
-import classes from "./DeleteBlog.module.css";
+import { Button } from 'react-bootstrap';
 
 
 const DeleteBlog = (props) => {
-    const blogToDelete = props.blogName
+    const blogToDelete = props.blogTitle
 
     const DeleteBlogForm =
-        <div className={classes.actions}>
+        <div>
             <label>Are You Sure you wish to delete {blogToDelete}</label>
-            <button onClick={props.onClose} className={classes['button--alt']}>Close</button>
-            <button onClick={props.delete} className={classes.delete}>Confirm</button>
+            <Button onClick={props.onClose}>Close</Button>
+            <Button onClick={props.delete}>Confirm</Button>
         </div>
 
     return (
